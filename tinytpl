@@ -1,13 +1,16 @@
 #!/bin/sh
+# '#%' starts a shell-line
+# '#%include file' 
+# '#slurp' at a line's end removes newline
 
 FILE="$1"
 
 IFS=
 while read -r 'LINE'; do  
-  if printf "%s" "$LINE" | grep "^#%include " >/dev/null; then
+  if printf "%s" "$LINE" | grep -q "^#%include "; then
     ./tinytpl "$( printf "%s" "$LINE" | sed s/"^#%include "//  )"
     continue
-  elif printf "%s" "$LINE" | grep "^#%" >/dev/null; then
+  elif printf "%s" "$LINE" | grep -q "^#%"; then
     printf "%s\n" "$( printf "%s" "$LINE" | sed s/"^#%"// )"
     continue
   fi
@@ -18,8 +21,8 @@ while read -r 'LINE'; do
                                  sed s/'$('/'\\$('/g | \
                                  sed s/'`'/'\\`'/g )"
 
-  if printf "%s" "$LINE" | grep "#slurp$" >/dev/null; then
-    LINE="`printf "%s" "$LINE" | sed s/"#slurp$"//`"
+  if printf "%s" "$LINE" | grep -q "#slurp$"; then
+    LINE="$( printf "%s" "$LINE" | sed s/"#slurp$"// )"
     printf "%s\n" "printf \"%s\" \"$LINE\""
   else 
     printf "%s\n" "printf \"%s\\n\" \"$LINE\""
