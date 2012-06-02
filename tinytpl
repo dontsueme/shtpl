@@ -4,9 +4,10 @@
 # This is free software: you are free to change and redistribute it. There is NO WARRANTY, to the extent permitted by law.
 
 if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
-  printf "\n  %s\n\n  %s\n  %s\n  %s\n\n  %s\n\n"\
-  "tinytpl - a tiny shell template engine"\
+  printf "\n  %s\n\n  %s\n  %s\n  %s\n  %s\n\n  %s\n\n"\
+  "tinytpl (VERSION) - a tiny shell template engine"\
   "'#%' starts a shell-line (tested: bash and busybox' ash)"\
+  "'#%#' comment"\
   "'#%include file'"\
   "'#slurp' removes newline"\
   "to execute type: sh -c \"\$( tinytpl template )\""
@@ -18,7 +19,7 @@ tinytpl() {
   IFS=
   while read -r 'LINE'; do  
     if printf "%s" "$LINE" | grep -q "^#%include "; then
-      tinytpl "$( printf "%s" "$LINE" | sed s/"^#%include "//  )"
+      tinytpl "$( printf "%s" "$LINE" | sed s/"^#%include "// )"
       continue
     elif printf "%s" "$LINE" | grep -q "^#%"; then
       printf "%s\n" "$( printf "%s" "$LINE" | sed s/"^#%"// )"
