@@ -1,6 +1,6 @@
 busybox
 VERSION
-.swp
+*.swp
 release/*
 
 # OS generated files #
