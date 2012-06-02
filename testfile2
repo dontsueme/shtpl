@@ -1,0 +1,6 @@
+#% date="$( date )"
+   $date
+   $( date )
+   ` date `
+   ./*.sh 
+   <( ls )
