@@ -7,6 +7,12 @@ release/tinytpl: tinytpl
 	sed s/VERSION/"`cat VERSION`"/ tinytpl > release/tinytpl
 	chmod +x release/tinytpl
 
+install: release/tinytpl
+	install -m 755 release/tinytpl /usr/local/bin
+
+uninstall:
+	rm -fv /usr/local/bin/tinytpl
+
 clean:
 	[ -d release ] && rm -r release; rm -f VERSION
 

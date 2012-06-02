@@ -7,6 +7,12 @@
     '#slurp' removes newline
      
     to execute type: sh -c "$( tinytpl template )"
+    
+    (License GPLv3+)
+
+#### Installation:
+
+    sudo make install
 
 #### Example Templates: 
     ~$ cat testfile
@@ -48,7 +54,7 @@
     #include testfile2
 
 #### Results in:
-    ~$ ./busybox sh -c "$( busybox sh tinytpl testfile )"
+    ~$ ./busybox sh -c "$( ./busybox sh tinytpl testfile )"
        Sam Jun  2 22:59:29 CEST 2012
        $( date )
        ` date `
