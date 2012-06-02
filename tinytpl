@@ -27,9 +27,7 @@ tinytpl() {
 
     # dangerous signs are:  \, ", $(, ´ 
     LINE="$( printf "%s" "$LINE" | sed s/"\\\\"/"\\\\\\\\"/g | \
-                                   sed s/'"'/'\\"'/g | \
-                                   sed s/'$('/'\\$('/g | \
-                                   sed s/'`'/'\\`'/g )"
+    sed -e s/'"'/'\\"'/g -e s/'$('/'\\$('/g -e s/'`'/'\\`'/g )"
 
     if printf "%s" "$LINE" | grep -q "#slurp$"; then
       LINE="$( printf "%s" "$LINE" | sed s/"#slurp$"// )"
