@@ -32,7 +32,7 @@ Example:
       <( ls )
 
 # tinytpl's output:
-$ ./busybox sh tinytpl testfile
+~$ ./busybox sh tinytpl testfile
  date="$( date )"
 printf "%s\n" "   $date"
 printf "%s\n" "   \$( date )"
