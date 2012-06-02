@@ -1,8 +1,17 @@
 #!/bin/sh
-# '#%' starts a shell-line
-# '#%include file' 
-# '#slurp' at a line's end removes newline
-# to execute type: sh -c "$( tinytpl template )"
+# Author: Stefan Giermair (zstegi@gmail.com)
+# License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.
+# This is free software: you are free to change and redistribute it. There is NO WARRANTY, to the extent permitted by law.
+
+if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+  printf "\n  %s\n\n  %s\n  %s\n  %s\n\n  %s\n\n"\
+  "tinytpl - a tiny shell template engine"\
+  "'#%' starts a shell-line (tested: bash and busybox' ash)"\
+  "'#%include file'"\
+  "'#slurp' removes newline"\
+  "to execute type: sh -c \"\$( tinytpl template )\""
+  exit 0
+fi
 
 tinytpl() {
   FILE="$1"
