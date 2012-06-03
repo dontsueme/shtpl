@@ -8,7 +8,7 @@
     #slurp (removes trailing newline)
     
     options:
-    -ass/-allow-subshell: does not mask $(, ´
+    -ass/--allow-subshell: does not mask $(, ´
     
     usage: sh -c "$( tinytpl [options] template )"
      
