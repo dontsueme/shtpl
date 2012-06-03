@@ -3,15 +3,27 @@
 # License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.
 # This is free software: you are free to change and redistribute it. There is NO WARRANTY, to the extent permitted by law.
 
-if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
-  printf "\n  %s\n\n  %s\n  %s\n  %s\n  %s\n\n  %s\n\n"\
+print_help() {
+  printf "\n  %s\n\n  %s\n  %s\n  %s\n  %s\n  %s\n\n  %s\n  %s\n\n  %s\n\n"\
   "tinytpl (VERSION) - a tiny shell template engine"\
-  "'#%' starts a shell-line (tested: bash and busybox' ash)"\
-  "'#%#' comment"\
-  "'#%include file'"\
-  "'#slurp' removes newline"\
-  "to execute type: sh -c \"\$( tinytpl template )\""
-  exit 0
+  "syntax:"\
+  "#% shell-command"\
+  "#%# comment"\
+  "#%include file"\
+  "#slurp (removes trailing newline)"\
+  "options:"\
+  "-ass/-allow-subshell: does not mask \$(, ´"\
+  "usage: sh -c \"\$( tinytpl [options] template )\""
+  exit $1 
+}
+
+unset ASS
+if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+  print_help 0
+elif [ "$1" = "-ass" ] || [ "$1" = "--allow-subshell" ]; then
+  # don't mask $(, ´
+  export ASS=1
+  shift 
 fi
 
 tinytpl() {
@@ -27,8 +39,10 @@ tinytpl() {
     fi
 
     # dangerous signs are:  \, ", $(, ´ 
-    LINE="$( printf "%s" "$LINE" | sed s/"\\\\"/"\\\\\\\\"/g | \
-    sed -e s/'"'/'\\"'/g -e s/'$('/'\\$('/g -e s/'`'/'\\`'/g )"
+    LINE="$( printf "%s" "$LINE" | sed s/"\\\\"/"\\\\\\\\"/g | sed s/'"'/'\\"'/g )"
+    if [ -z "$ASS" ]; then
+      LINE="$( printf "%s" "$LINE" | sed -e s/'$('/'\\$('/g -e s/'`'/'\\`'/g )"
+    fi
 
     if printf "%s" "$LINE" | grep -q "#slurp$"; then
       LINE="$( printf "%s" "$LINE" | sed s/"#slurp$"// )"

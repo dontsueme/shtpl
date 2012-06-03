@@ -5,6 +5,6 @@
    blubber test $i ist $str, #slurp
    keine'\\" frage
 #% done 
-  blub
+  blub!
 
 #%#include testfile2
