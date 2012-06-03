@@ -1,17 +1,18 @@
   
 ## tinytpl - a tiny shell template engine
 
-    Features:
-    #%		starts a shell-line (tested: bash and busybox' ash)
-    #%#		comment
+    syntax:
+    #% shell-command
+    #%# comment
     #%include file
-    #slurp	removes newline
+    #slurp (removes trailing newline)
+    
+    options:
+    -ass/-allow-subshell: does not mask $(, ´
+    
+    usage: sh -c "$( tinytpl [options] template )"
      
-    (License GPLv3+)
-     
-#### Usage: 
-
-    sh -c "$( tinytpl template )"
+    (License: GPLv3+)
 
 #### Installation:
 
@@ -26,7 +27,7 @@
          blubber test $i ist $str, #slurp
          keine'\\" frage
       #% done 
-        blub
+        blub!
     
       #%#include testfile2
 
@@ -39,7 +40,7 @@
          <( ls )
 
 #### tinytpl's output:
-    $ ./busybox sh tinytpl testfile
+    $ tinytpl testfile
     date="$( date )"
     printf "%s\n" "   $date"
     printf "%s\n" "   \$( date )"
@@ -52,12 +53,12 @@
     printf "%s" "   blubber test $i ist $str, "
     printf "%s\n" "   keine'\\\\\" frage"
      done 
-    printf "%s\n" "  blub"
+    printf "%s\n" "  blub!"
     printf "%s\n" ""
     #include testfile2
 
 #### Results in:
-    $ ./busybox sh -c "$( ./busybox sh tinytpl testfile )"
+    $ sh -c "$( tinytpl testfile )"
       Sam Jun  2 22:59:29 CEST 2012
       $( date )
       ` date `
@@ -67,5 +68,5 @@
       blubber test first ist super,    keine'\\" frage
       blubber test second" ist super,    keine'\\" frage
       blubber test third ist not so super,    keine'\\" frage
-     blub
+     blub!
     
