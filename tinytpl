@@ -31,7 +31,7 @@ tinytpl() {
   IFS=
   while read -r 'LINE'; do  
     if printf "%s" "$LINE" | grep -q "^#%include "; then
-      tinytpl "$( printf "%s" "$LINE" | sed s/"^#%include "// )"
+      tinytpl $( printf "%s" "$LINE" | sed s/"^#%include "// )
       continue
     elif printf "%s" "$LINE" | grep -q "^#%"; then
       printf "%s\n" "$( printf "%s" "$LINE" | sed s/"^#%"// )"
