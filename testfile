@@ -1,4 +1,4 @@
-#%include testfile2
+#%include testfile2 
 
 #% for i in first "second\"" third; do 
 #% str=super; [ "$i" = "third" ] && str="not so super" 
