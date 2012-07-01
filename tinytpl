@@ -4,13 +4,14 @@
 # This is free software: you are free to change and redistribute it. There is NO WARRANTY, to the extent permitted by law.
 
 print_help() {
-  printf "\n  %s\n\n  %s\n  %s\n  %s\n  %s\n  %s\n\n  %s\n  %s\n\n  %s\n\n"\
+  printf "\n  %s\n\n  %s\n  %s\n  %s\n  %s\n  %s\n  %s\n\n  %s\n  %s\n\n  %s\n\n"\
   "tinytpl (VERSION) - a tiny shell template engine"\
   "syntax:"\
   "#% shell-command"\
   "#%# comment"\
   "#%include file"\
   "#slurp (removes trailing newline)"\
+  "%$ masks $"\
   "options:"\
   "-ass/--allow-subshell: does not mask \$(, ´"\
   "usage: sh -c \"\$( tinytpl [options] template )\""
@@ -39,7 +40,7 @@ tinytpl() {
     fi
 
     # dangerous signs are:  \, ", $(, ´ 
-    LINE="$( printf "%s" "$LINE" | sed s/"\\\\"/"\\\\\\\\"/g | sed s/'"'/'\\"'/g )"
+    LINE="$( printf "%s" "$LINE" | sed s/"\\\\"/"\\\\\\\\"/g | sed -e s/'"'/'\\"'/g -e s/'%\$'/'\\$'/g )"
     if [ -z "$ASS" ]; then
       LINE="$( printf "%s" "$LINE" | sed -e s/'$('/'\\$('/g -e s/'`'/'\\`'/g )"
     fi

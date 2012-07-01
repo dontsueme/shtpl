@@ -6,6 +6,7 @@
     #%# comment
     #%include file
     #slurp (removes trailing newline)
+    %$ masks $
     
     options:
     -ass/--allow-subshell: does not mask $(, ´
@@ -38,6 +39,7 @@
          ` date `
          ./*.sh 
          <( ls )
+         %$date
 
 #### tinytpl's output:
     $ tinytpl testfile
@@ -47,6 +49,7 @@
     printf "%s\n" "   \` date \`"
     printf "%s\n" "   ./*.sh "
     printf "%s\n" "   <( ls )"
+    printf "%s\n" "   \$date"
     printf "%s\n" ""
      for i in first "second\"" third; do 
      str=super; [ "$i" = "third" ] && str="not so super" 
@@ -64,9 +67,11 @@
       ` date `
       ./*.sh
       <( ls )
+      $date
     
       blubber test first ist super,    keine'\\" frage
       blubber test second" ist super,    keine'\\" frage
       blubber test third ist not so super,    keine'\\" frage
      blub!
-    
+     
+

@@ -4,3 +4,4 @@
    ` date `
    ./*.sh 
    <( ls )
+   %$date
