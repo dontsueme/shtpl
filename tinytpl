@@ -32,7 +32,7 @@ tinytpl() {
   IFS=
   while read -r 'LINE'; do  
     if printf "%s" "$LINE" | grep -q "^#%include"; then
-      tinytpl "$( printf "%s" "$LINE" | sed s/"^#%include"// | sed s/^\ *// | sed s/\ *$// )"
+      tinytpl "$( printf "%s" "$LINE" | sed -e s/"^#%include"// -e s/^\ *// -e s/\ *$// )"
       continue
     elif printf "%s" "$LINE" | grep -q "^#%"; then
       printf "%s\n" "$( printf "%s" "$LINE" | sed s/"^#%"// )"
@@ -40,7 +40,7 @@ tinytpl() {
     fi
 
     # dangerous signs are:  \, ", $(, ´ 
-    LINE="$( printf "%s" "$LINE" | sed s/"\\\\"/"\\\\\\\\"/g | sed -e s/'"'/'\\"'/g -e s/'%\$'/'\\$'/g )"
+    LINE="$( printf "%s" "$LINE" | sed -e s/"\\\\"/"\\\\\\\\"/g -e s/'"'/'\\"'/g -e s/'%\$'/'\\$'/g )"
     if [ -z "$ASS" ]; then
       LINE="$( printf "%s" "$LINE" | sed -e s/'$('/'\\$('/g -e s/'`'/'\\`'/g )"
     fi
