@@ -5,7 +5,7 @@
 
 print_help() {
   printf "\n  %s\n\n  %s\n  %s\n  %s\n  %s\n  %s\n  %s\n\n  %s\n  %s\n\n  %s\n\n"\
-  "tinytpl (VERSION) - a tiny shell template engine"\
+  "tinytpl (VERSION) - a shell template engine"\
   "syntax:"\
   "#% shell-command"\
   "#%# comment"\

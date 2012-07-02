@@ -1,5 +1,5 @@
   
-## tinytpl - a tiny shell template engine
+## tinytpl - a shell template engine
 
     syntax:
     #% shell-command
