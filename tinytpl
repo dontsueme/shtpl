@@ -4,31 +4,48 @@
 # This is free software: you are free to change and redistribute it. There is NO WARRANTY, to the extent permitted by law.
 
 print_help() {
-  printf "\n  %s\n\n  %s\n  %s\n  %s\n  %s\n  %s\n  %s\n\n  %s\n  %s\n\n  %s\n\n"\
-  "tinytpl (VERSION) - a shell template engine"\
-  "syntax:"\
-  "#% shell-command"\
-  "#%# comment"\
-  "#%include file"\
-  "#slurp (removes trailing newline)"\
-  "%$ masks $"\
-  "options:"\
-  "-ass/--allow-subshell: does not mask \$(, ´"\
-  "usage: sh -c \"\$( tinytpl [options] template )\""
+  printf "\n  %s\n"\
+  "tinytpl (VERSION) - a shell template engine
+
+  syntax:
+  #% shell-command
+  #%# comment
+  #%include file
+  #slurp (removes trailing newline)
+  %$ masks $
+
+  options:
+  -ass/--allow-subshell: does not mask \$(, ´
+  -o  /--optimize      : minimize printf usage
+
+  usage: sh -c \"\$( tinytpl [options] template )\"
+"
   exit $1 
 }
 
 unset ASS
-if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
-  print_help 0
-elif [ "$1" = "-ass" ] || [ "$1" = "--allow-subshell" ]; then
-  # don't mask $(, ´
-  export ASS=1
-  shift 
-fi
+unset OPT
 
-OPT=""
-CACHE=
+while true; do
+  case $1 in
+    -h|--help)
+      print_help 0
+      ;;
+    -ass|--allow-subshell)
+      ASS=1
+      shift
+      ;;
+    -o|--optimize)
+      OPT=1
+      shift
+      ;;
+    *)
+      break
+      ;;
+  esac
+done
+
+unset CACHE
 #NL=$'\n'
 NL="$( printf "\nx" )"
 NL=${NL%x}
@@ -38,7 +55,7 @@ addCache() {
 }
 
 printCache() {
-  [ "$CACHE" ] && printf "printf \"%%s\\\\n\" %s\n" "$CACHE\"" && CACHE=
+  [ "$CACHE" ] && printf "printf \"%%s\\\\n\" %s\n" "$CACHE\"" && unset CACHE
 }
 
 tinytpl() {
@@ -77,5 +94,5 @@ tinytpl() {
 
 tinytpl "$1"
 Ret=$?
-[ $? = 0 ] && [ "$OPT" ] && printCache
+[ $Ret = 0 ] && [ "$OPT" ] && printCache
 exit $Ret 

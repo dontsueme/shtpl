@@ -10,6 +10,7 @@
     
     options:
     -ass/--allow-subshell: does not mask $(, ´
+    -o  /--optimize      : minimize printf usage
     
     usage: sh -c "$( tinytpl [options] template )"
      
