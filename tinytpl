@@ -63,10 +63,10 @@ tinytpl() {
   IFS=
   while read -r 'LINE'; do  
     if printf "%s" "$LINE" | grep -q "^#%"; then
-      [ "$OPT" ] && printCache
       if printf "%s" "$LINE" | grep -q "^#%include"; then
         tinytpl "$( printf "%s" "$LINE" | sed -e s/"^#%include"// -e s/^\ *// -e s/\ *$// )"
       else
+        [ "$OPT" ] && printCache
         printf "%s\n" "$( printf "%s" "$LINE" | sed s/"^#%"// )"
       fi
       continue
