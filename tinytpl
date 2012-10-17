@@ -23,8 +23,8 @@ print_help() {
   exit $1 
 }
 
-unset ASS
-unset OPT
+unset Ass
+unset Opt
 
 while true; do
   case $1 in
@@ -32,11 +32,11 @@ while true; do
       print_help 0
       ;;
     -ass|--allow-subshell)
-      ASS=1
+      Ass=1
       shift
       ;;
     -o|--optimize)
-      OPT=1
+      Opt=1
       shift
       ;;
     *)
@@ -45,54 +45,54 @@ while true; do
   esac
 done
 
-unset CACHE
-#NL=$'\n'
-NL="$( printf "\nx" )"
-NL=${NL%x}
+unset Cache
+#Nl=$'\n'
+Nl="$( printf "\nx" )"
+Nl=${Nl%x}
 
 addCache() {
-  [ "$CACHE" ] && CACHE="$CACHE$NL$1" || CACHE="\"$1"
+  [ "$Cache" ] && Cache="$Cache$Nl$1" || Cache="\"$1"
 }
 
 printCache() {
-  [ "$CACHE" ] && printf "printf \"%%s\\\\n\" %s\n" "$CACHE\"" && unset CACHE
+  [ "$Cache" ] && printf "printf \"%%s\\\\n\" %s\n" "$Cache\"" && unset Cache 
 }
 
 tinytpl() {
-  FILE="$1"
+  File="$1"
   IFS=
-  while read -r 'LINE'; do  
-    if printf "%s" "$LINE" | grep -q "^#%"; then
-      if printf "%s" "$LINE" | grep -q "^#%include"; then
-        tinytpl "$( printf "%s" "$LINE" | sed -e s/"^#%include"// -e s/^\ *// -e s/\ *$// )"
+  while read -r 'Line'; do  
+    if printf "%s" "$Line" | grep -q "^#%"; then
+      if printf "%s" "$Line" | grep -q "^#%include"; then
+        tinytpl "$( printf "%s" "$Line" | sed -e s/"^#%include"// -e s/^\ *// -e s/\ *$// )"
       else
-        [ "$OPT" ] && printCache
-        printf "%s\n" "$( printf "%s" "$LINE" | sed s/"^#%"// )"
+        [ "$Opt" ] && printCache
+        printf "%s\n" "$( printf "%s" "$Line" | sed s/"^#%"// )"
       fi
       continue
     fi
 
     # dangerous signs are:  \, ", $(, ´ 
-    LINE="$( printf "%s" "$LINE" | sed -e s/"\\\\"/"\\\\\\\\"/g -e s/'"'/'\\"'/g -e s/'%\$'/'\\$'/g )"
-    if [ -z "$ASS" ]; then
-      LINE="$( printf "%s" "$LINE" | sed -e s/'$('/'\\$('/g -e s/'`'/'\\`'/g )"
+    Line="$( printf "%s" "$Line" | sed -e s/"\\\\"/"\\\\\\\\"/g -e s/'"'/'\\"'/g -e s/'%\$'/'\\$'/g )"
+    if [ -z "$Ass" ]; then
+      Line="$( printf "%s" "$Line" | sed -e s/'$('/'\\$('/g -e s/'`'/'\\`'/g )"
     fi
 
-    if printf "%s" "$LINE" | grep -q "#slurp$"; then
-      [ "$OPT" ] && printCache
-      LINE="$( printf "%s" "$LINE" | sed s/"#slurp$"// )"
-      printf "%s\n" "printf \"%s\" \"$LINE\""
+    if printf "%s" "$Line" | grep -q "#slurp$"; then
+      [ "$Opt" ] && printCache
+      Line="$( printf "%s" "$Line" | sed s/"#slurp$"// )"
+      printf "%s\n" "printf \"%s\" \"$Line\""
     else 
-      if [ "$OPT" ]; then 
-        addCache "$LINE"
+      if [ "$Opt" ]; then 
+        addCache "$Line"
       else
-        printf "%s\n" "printf \"%s\\n\" \"$LINE\""
+        printf "%s\n" "printf \"%s\\n\" \"$Line\""
       fi
     fi
-  done < "$FILE"
+  done < "$File"
 }
 
 tinytpl "$1"
 Ret=$?
-[ $Ret = 0 ] && [ "$OPT" ] && printCache
+[ $Ret = 0 ] && [ "$Opt" ] && printCache
 exit $Ret 
