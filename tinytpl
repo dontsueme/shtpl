@@ -92,7 +92,4 @@ tinytpl() {
   done < "$File"
 }
 
-tinytpl "$1"
-Ret=$?
-[ $Ret = 0 ] && [ "$Opt" ] && printCache
-exit $Ret 
+tinytpl "$1" && [ "$Opt" ] && printCache
