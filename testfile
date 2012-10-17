@@ -1,5 +1,8 @@
 #%include testfile2 
 
+
+
+
 #% for i in first "second\"" third; do 
 #% str=super; [ "$i" = "third" ] && str="not so super" 
    blubber test $i ist $str, #slurp

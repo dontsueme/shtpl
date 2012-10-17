@@ -27,11 +27,26 @@ elif [ "$1" = "-ass" ] || [ "$1" = "--allow-subshell" ]; then
   shift 
 fi
 
+OPT=""
+CACHE=
+#NL=$'\n'
+NL="$( printf "\nx" )"
+NL=${NL%x}
+
+addCache() {
+  [ "$CACHE" ] && CACHE="$CACHE$NL$1" || CACHE="\"$1"
+}
+
+printCache() {
+  [ "$CACHE" ] && printf "printf \"%%s\\\\n\" %s\n" "$CACHE\"" && CACHE=
+}
+
 tinytpl() {
   FILE="$1"
   IFS=
   while read -r 'LINE'; do  
     if printf "%s" "$LINE" | grep -q "^#%"; then
+      [ "$OPT" ] && printCache
       if printf "%s" "$LINE" | grep -q "^#%include"; then
         tinytpl "$( printf "%s" "$LINE" | sed -e s/"^#%include"// -e s/^\ *// -e s/\ *$// )"
       else
@@ -47,12 +62,20 @@ tinytpl() {
     fi
 
     if printf "%s" "$LINE" | grep -q "#slurp$"; then
+      [ "$OPT" ] && printCache
       LINE="$( printf "%s" "$LINE" | sed s/"#slurp$"// )"
       printf "%s\n" "printf \"%s\" \"$LINE\""
     else 
-      printf "%s\n" "printf \"%s\\n\" \"$LINE\""
+      if [ "$OPT" ]; then 
+        addCache "$LINE"
+      else
+        printf "%s\n" "printf \"%s\\n\" \"$LINE\""
+      fi
     fi
   done < "$FILE"
 }
 
 tinytpl "$1"
+Ret=$?
+[ $? = 0 ] && [ "$OPT" ] && printCache
+exit $Ret 
