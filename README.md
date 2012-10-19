@@ -26,13 +26,20 @@
 #### Example Templates: 
     $ cat testfile
       #%include testfile2
-    
+      
+      
+      #%incraw testraw
+       
       #% for i in first "second\"" third; do 
       #% str=super; [ "$i" = "third" ] && str="not so super" 
          blubber test $i ist $str, #slurp
          keine'\\" frage
       #% done 
         blub!
+      
+      #%raw
+      #%echo Hello
+      #%end raw
     
       #%#include testfile2
 
@@ -44,6 +51,16 @@
          ./*.sh 
          <( ls )
          %$date
+     
+     $ cat testraw 
+     Blubber blubb
+     blub
+     blubber blub
+     $date
+     $
+     #% echo blub
+     ` date `
+     $(
 
 #### tinytpl's output:
     $ tinytpl testfile
