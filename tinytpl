@@ -11,8 +11,11 @@ print_help() {
   #% shell-command
   #%# comment
   #%include file
-  #slurp (removes trailing newline)
-  %$ masks $
+  #%raw 
+  #%end raw
+  #%incraw file (include raw file)
+  #slurp        (removes trailing newline)
+  %$            (masks $)
 
   options:
   -ass/--allow-subshell: does not mask \$(, ´
@@ -60,25 +63,38 @@ printCache() {
 
 tinytpl() {
   File="$1"
+  Raw="$2"
   IFS=
   while read -r 'Line'; do  
-    if printf "%s" "$Line" | grep -q "^#%"; then
+    if [ -z "$Raw" ] && printf "%s" "$Line" | grep -q "^#%"; then
       if printf "%s" "$Line" | grep -q "^#%include"; then
         tinytpl "$( printf "%s" "$Line" | sed -e s/"^#%include"// -e s/^\ *// -e s/\ *$// )"
+      elif printf "%s" "$Line" | grep -q "^#%incraw"; then
+        tinytpl "$( printf "%s" "$Line" | sed -e s/"^#%incraw"// -e s/^\ *// -e s/\ *$// )" "RAW"
+      elif printf "%s" "$Line" | grep -q "^#%raw[ ]*$" ; then
+        Raw="TEXT"
       else
         [ "$Opt" ] && printCache
         printf "%s\n" "$( printf "%s" "$Line" | sed s/"^#%"// )"
       fi
       continue
+    elif [ "$Raw" = "TEXT" ] && printf "%s" "$Line" | grep -q "^#%end raw"; then
+      unset Raw
+      continue
     fi
 
     # dangerous signs are:  \, ", $(, ´ 
-    Line="$( printf "%s" "$Line" | sed -e s/"\\\\"/"\\\\\\\\"/g -e s/'"'/'\\"'/g -e s/'%\$'/'\\$'/g )"
-    if [ -z "$Ass" ]; then
-      Line="$( printf "%s" "$Line" | sed -e s/'$('/'\\$('/g -e s/'`'/'\\`'/g )"
+    Line="$( printf "%s" "$Line" | sed -e s/"\\\\"/"\\\\\\\\"/g -e s/'"'/'\\"'/g )"
+    if [ "$Raw" ]; then
+      Line="$( printf "%s" "$Line" | sed -e s/'\$'/'\\$'/g -e s/'`'/'\\`'/g )"
+    else
+      Line="$( printf "%s" "$Line" | sed -e s/'%\$'/'\\$'/g )"
+      if [ -z "$Ass" ]; then
+        Line="$( printf "%s" "$Line" | sed -e s/'$('/'\\$('/g -e s/'`'/'\\`'/g )"
+      fi
     fi
 
-    if printf "%s" "$Line" | grep -q "#slurp$"; then
+    if [ -z "$Raw" ] && printf "%s" "$Line" | grep -q "#slurp$"; then
       [ "$Opt" ] && printCache
       Line="$( printf "%s" "$Line" | sed s/"#slurp$"// )"
       printf "%s\n" "printf \"%s\" \"$Line\""
@@ -90,6 +106,7 @@ tinytpl() {
       fi
     fi
   done < "$File"
+  unset Raw 
 }
 
 tinytpl "$1" && [ "$Opt" ] && printCache

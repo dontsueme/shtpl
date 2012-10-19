@@ -5,9 +5,12 @@
     #% shell-command
     #%# comment
     #%include file
-    #slurp (removes trailing newline)
-    %$ masks $
-    
+    #%raw 
+    #%end raw
+    #%incraw file (include raw file)
+    #slurp        (removes trailing newline)
+    %$            (masks $)    
+
     options:
     -ass/--allow-subshell: does not mask $(, ´
     -o  /--optimize      : minimize printf usage
@@ -52,12 +55,25 @@
     printf "%s\n" "   <( ls )"
     printf "%s\n" "   \$date"
     printf "%s\n" ""
+    printf "%s\n" ""
+    printf "%s\n" "Blubber blubb"
+    printf "%s\n" "blub"
+    printf "%s\n" "blubber blub"
+    printf "%s\n" "\$date"
+    printf "%s\n" "\$"
+    printf "%s\n" "#% echo blub"
+    printf "%s\n" "\` date \`"
+    printf "%s\n" "\$("
+    printf "%s\n" ""
+    printf "%s\n" ""
      for i in first "second\"" third; do 
      str=super; [ "$i" = "third" ] && str="not so super" 
     printf "%s" "   blubber test $i ist $str, "
     printf "%s\n" "   keine'\\\\\" frage"
      done 
     printf "%s\n" "  blub!"
+    printf "%s\n" ""
+    printf "%s\n" "#%echo Hello"
     printf "%s\n" ""
     #include testfile2
 
@@ -70,9 +86,20 @@
       <( ls )
       $date
     
-      blubber test first ist super,    keine'\\" frage
-      blubber test second" ist super,    keine'\\" frage
-      blubber test third ist not so super,    keine'\\" frage
-     blub!
+    
+    Blubber blubb
+    blub
+    blubber blub
+    $date
+    $
+    #% echo blub
+    ` date `
+    $(
+    
+    
+       blubber test first ist super,    keine'\\" frage
+       blubber test second" ist super,    keine'\\" frage
+       blubber test third ist not so super,    keine'\\" frage
+      blub!
      
-
+    #%echo Hello
