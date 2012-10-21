@@ -16,6 +16,8 @@
     -o  /--optimize      : minimize printf usage
     
     usage: sh -c "$( tinytpl [options] template )"
+
+    Should work with busybox ash, dash, bash, ksh and zsh.
      
     (License: GPLv3+)
 
