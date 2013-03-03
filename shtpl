@@ -5,7 +5,7 @@
 
 print_help() {
   printf "\n  %s\n"\
-  "tinytpl (VERSION) - a shell template engine
+  "shtpl (VERSION) - a shell template engine
 
   syntax:
   #% shell-command
@@ -21,7 +21,7 @@ print_help() {
   -ass/--allow-subshell: does not mask \$(, ´
   -o  /--optimize      : minimize printf usage
 
-  usage: sh -c \"\$( tinytpl [options] template )\"
+  usage: sh -c \"\$( shtpl [options] template )\"
 "
   exit $1 
 }
@@ -61,16 +61,16 @@ printCache() {
   [ "$Cache" ] && printf "printf \"%%s\\\\n\" %s\n" "$Cache\"" && unset Cache 
 }
 
-tinytpl() {
+shtpl() {
   File="$1"
   Raw="$2"
   IFS=
   while read -r 'Line'; do  
     if [ -z "$Raw" ] && printf "%s" "$Line" | grep -q "^#%"; then
       if printf "%s" "$Line" | grep -q "^#%include"; then
-        tinytpl "$( printf "%s" "$Line" | sed -e s/"^#%include"// -e 's/^ *//' -e 's/ *$//' )"
+        shtpl "$( printf "%s" "$Line" | sed -e s/"^#%include"// -e 's/^ *//' -e 's/ *$//' )"
       elif printf "%s" "$Line" | grep -q "^#%incraw"; then
-        tinytpl "$( printf "%s" "$Line" | sed -e s/"^#%incraw"// -e 's/^ *//' -e 's/ *$//' )" "RAW"
+        shtpl "$( printf "%s" "$Line" | sed -e s/"^#%incraw"// -e 's/^ *//' -e 's/ *$//' )" "RAW"
       elif printf "%s" "$Line" | grep -q "^#%raw[ ]*$" ; then
         Raw="TEXT"
       else
@@ -109,4 +109,4 @@ tinytpl() {
   unset Raw 
 }
 
-tinytpl "$1" && [ "$Opt" ] && printCache
+shtpl "$1" && [ "$Opt" ] && printCache

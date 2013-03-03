@@ -1,5 +1,5 @@
   
-## tinytpl - a shell template engine
+## shtpl - a shell template engine
 
     syntax:
     #% shell-command
@@ -15,7 +15,7 @@
     -ass/--allow-subshell: does not mask $(, ´
     -o  /--optimize      : minimize printf usage
     
-    usage: sh -c "$( tinytpl [options] template )"
+    usage: sh -c "$( shtpl [options] template )"
 
     Should work with busybox ash, dash, bash, ksh and zsh.
      
@@ -64,8 +64,8 @@
      ` date `
      $(
 
-#### tinytpl's output:
-    $ tinytpl testfile
+#### shtpl's output:
+    $ shtpl testfile
     date="$( date )"
     printf "%s\n" "   $date"
     printf "%s\n" "   \$( date )"
@@ -97,7 +97,7 @@
     #include testfile2
 
 #### Results in:
-    $ sh -c "$( tinytpl testfile )"
+    $ sh -c "$( shtpl testfile )"
       Sam Jun  2 22:59:29 CEST 2012
       $( date )
       ` date `
