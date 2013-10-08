@@ -30,22 +30,21 @@ unset Ass
 unset Opt
 
 while true; do
-  case $1 in
+  case "$1" in
     -h|--help)
       print_help 0
       ;;
     -ass|--allow-subshell)
       Ass=1
-      shift
       ;;
     -o|--optimize)
       Opt=1
-      shift
       ;;
     *)
       break
       ;;
   esac
+  shift
 done
 
 unset Cache
