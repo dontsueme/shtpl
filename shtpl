@@ -50,14 +50,14 @@ done
 unset Cache
 #Nl=$'\n'
 Nl="$( printf "\nx" )"
-Nl=${Nl%x}
+Nl="${Nl%x}"
 
 addCache() {
-  [ "$Cache" ] && Cache="$Cache$Nl$1" || Cache="\"$1"
+  [ "$Cache" ] && Cache="$Cache$Nl$1" || Cache="$1"
 }
 
 printCache() {
-  [ "$Cache" ] && printf "printf \"%%s\\\\n\" %s\n" "$Cache\"" && unset Cache 
+  [ "$Cache" ] && printf 'printf "%%s\\n" "%s"\n' "$Cache" && unset Cache 
 }
 
 # to prevent breakout of the printf "%s" "$Line" command
@@ -106,12 +106,12 @@ shtpl() {
     if [ -z "$Raw" ] && printf "%s" "$Line" | grep -q '#slurp$'; then
       [ "$Opt" ] && printCache
       Line="$( printf "%s" "$Line" | sed 's/#slurp$//' )"
-      printf "%s\n" "printf \"%s\" \"$Line\""
+      printf 'printf "%%s" "%s"\n' "$Line"
     else 
       if [ "$Opt" ]; then 
         addCache "$Line"
       else
-        printf "%s\n" "printf \"%s\\n\" \"$Line\""
+        printf 'printf "%%s\\n" "%s"\n' "$Line"
       fi
     fi
   done < "$File"
