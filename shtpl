@@ -77,7 +77,7 @@ shtpl() {
       if printf "%s" "$Line" | grep -q '^#%include'; then
         Line="$( sanitizeLineForEval )"
         shtpl "$( eval printf "%s" "$Line" )"
-       elif printf "%s" "$Line" | grep -q "^#%incraw"; then
+      elif printf "%s" "$Line" | grep -q "^#%incraw"; then
         Line="$( sanitizeLineForEval )"
         shtpl "$( eval printf "%s" "$Line" )" "RAW"
       elif printf "%s" "$Line" | grep -q '^#%raw[ ]*$' ; then
