@@ -3,6 +3,7 @@ busybox
 release/*
 VERSION
 vala/VERSION.vala
+vala/shtpl
 
 # OS generated files #
 ######################
