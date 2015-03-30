@@ -122,7 +122,9 @@ void print_help() {
   -ass/--allow-subshell: does not mask $(, ´
   -o  /--optimize      : minimize printf usage
 
-  Usage: sh -c "$( shtpl [Options...] template )"
+  Example usage:
+  sh -c "$( shtpl [Options...] template )"
+  shtpl [Options...] template | ( . /dev/stdin )
 
 """.printf(VERSION));
   Process.exit(1);

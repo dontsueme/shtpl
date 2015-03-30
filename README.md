@@ -1,7 +1,7 @@
   
 ## shtpl - a shell template engine
 
-    syntax:
+    Syntax:
     #% shell-command
     #%# comment
     #%include file
@@ -11,11 +11,13 @@
     #slurp        (removes trailing newline)
     %$            (masks $)    
 
-    options:
+    Options:
     -ass/--allow-subshell: does not mask $(, ´
     -o  /--optimize      : minimize printf usage
     
-    usage: sh -c "$( shtpl [options] template )"
+    Example usage:
+    sh -c "$( shtpl [Options...] template )"
+    shtpl [Options...] template | ( . /dev/stdin )
 
     Should work with busybox ash, dash, bash, ksh and zsh.
      
