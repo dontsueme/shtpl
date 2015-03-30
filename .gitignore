@@ -1,7 +1,8 @@
 busybox
-VERSION
 *.swp
 release/*
+VERSION
+vala/VERSION.vala
 
 # OS generated files #
 ######################

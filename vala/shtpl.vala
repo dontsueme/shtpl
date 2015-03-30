@@ -105,18 +105,18 @@ void shtpl(string _file, bool raw = false, bool raw_text = false) throws GLib.Er
 }
 
 void print_help() {
-  stderr.printf("%s", """
-  shtpl (VERSION) - shell templating system (vala implementation)
+  stderr.puts("""
+  shtpl (%s) - shell templating system (vala implementation)
 
   Syntax:
-  #% shell-command
-  #%# comment
-  #%include file
-  #%raw
-  #%end raw
-  #%incraw file (include raw file)
+  #%% shell-command
+  #%%# comment
+  #%%include file
+  #%%raw
+  #%%end raw
+  #%%incraw file (include raw file)
   #slurp        (removes trailing newline)
-  %$            (masks $)
+  %%$            (masks $)
 
   Options:
   -ass/--allow-subshell: does not mask $(, ´
@@ -124,7 +124,7 @@ void print_help() {
 
   Usage: sh -c "$( shtpl [Options...] template )"
 
-""");
+""".printf(VERSION));
   Process.exit(1);
 }
 
