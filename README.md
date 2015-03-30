@@ -1,5 +1,5 @@
   
-## shtpl - a shell template engine
+## shtpl - shell templating system
 
     Syntax:
     #% shell-command
