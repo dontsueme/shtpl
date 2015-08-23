@@ -18,13 +18,13 @@ static bool opt = false;
 static StringBuilder sb = null;
 
 void addCache(string str) {
-  if (sb.len > 0)
-    sb.append("\n");
+  sb.append("\n");
   sb.append(str);
 }
 
 void printCache() {
   if (sb.len > 0) {
+    sb.erase(0,1); // remove leading \n
     stdout.printf("printf \"%%s\\n\" \"%s\"\n", sb.str);
     sb.erase();
   }

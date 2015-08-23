@@ -11,7 +11,7 @@ print_help() {
   #% shell-command
   #%# comment
   #%include file
-  #%raw 
+  #%raw
   #%end raw
   #%incraw file (include raw file)
   #slurp        (removes trailing newline)
@@ -25,7 +25,7 @@ print_help() {
   sh -c \"\$( shtpl [Options...] template )\"
   shtpl [Options...] template | ( . /dev/stdin )
 "
-  exit $1 
+  exit $1
 }
 
 unset Ass
@@ -55,11 +55,11 @@ Nl="$( printf "\nx" )"
 Nl="${Nl%x}"
 
 addCache() {
-  [ "$Cache" ] && Cache="$Cache$Nl$1" || Cache="$1"
+  Cache="$Cache$Nl$1"
 }
 
 printCache() {
-  [ "$Cache" ] && printf 'printf "%%s\\n" "%s"\n' "$Cache" && unset Cache 
+  [ "$Cache" ] && printf 'printf "%%s\\n" "%s"\n' "${Cache#$Nl}" && unset Cache
 }
 
 # to prevent breakout of the printf "%s" "$Line" command
@@ -74,7 +74,7 @@ shtpl() {
   File="$1"
   Raw="$2"
   IFS=
-  while read -r 'Line'; do  
+  while read -r Line; do
     if [ -z "$Raw" ] && printf "%s" "$Line" | grep -q "^#%"; then
       if printf "%s" "$Line" | grep -q '^#%include'; then
         Line="$( sanitizeLineForEval )"
@@ -94,7 +94,7 @@ shtpl() {
       continue
     fi
 
-    # dangerous signs are:  \, ", $(, ´ 
+    # dangerous signs are:  \, ", $(, `
     Line="$( printf "%s" "$Line" | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g' )"
     if [ "$Raw" ]; then
       Line="$( printf "%s" "$Line" | sed -e 's/\$/\\$/g' -e 's/`/\\`/g' )"
@@ -109,15 +109,15 @@ shtpl() {
       [ "$Opt" ] && printCache
       Line="$( printf "%s" "$Line" | sed 's/#slurp$//' )"
       printf 'printf "%%s" "%s"\n' "$Line"
-    else 
-      if [ "$Opt" ]; then 
+    else
+      if [ "$Opt" ]; then
         addCache "$Line"
       else
         printf 'printf "%%s\\n" "%s"\n' "$Line"
       fi
     fi
   done < "$File"
-  unset Raw 
+  unset Raw
 }
 
 shtpl "$1" && [ "$Opt" ] && printCache
