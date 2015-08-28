@@ -57,16 +57,18 @@ void shtpl(string _file, bool raw = false, bool raw_text = false) throws GLib.Er
   while ((line = dis.read_line(null)) != null) {
     if (!raw && !raw_text && line.has_prefix("#%")) {
       if (line.has_prefix("#%include")) {
+        string nfile = replaceWithEnvVar(line.substring(9).strip());
         try {
-          shtpl(replaceWithEnvVar(line.substring(9).strip()));
+          shtpl(nfile);
         } catch (Error e) {
-          stderr.printf("%s: %s\n", e.message, line);
+          stderr.printf("%s: Line '%s': File '%s'\n", e.message, line, nfile);
         }
       } else if (line.has_prefix("#%incraw")) {
+        string nfile = replaceWithEnvVar(line.substring(8).strip());
         try {
-          shtpl(replaceWithEnvVar(line.substring(8).strip()), true);
+          shtpl(nfile, true);
         } catch (Error e) {
-          stderr.printf("%s: %s\n", e.message, line);
+          stderr.printf("%s: Line '%s': File '%s'\n", e.message, line, nfile);
         }
       } else if (line.has_prefix("#%raw")) {
         raw_text = true;
