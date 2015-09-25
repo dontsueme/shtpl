@@ -94,12 +94,12 @@ shtpl() {
       continue
     fi
 
-    # dangerous signs are:  \, ", $(, `
+    # dangerous signs are:  \, ", $(, `, $[
     Line="$( printf "%s" "$Line" | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g' )"
     if [ "$Raw" ]; then
       Line="$( printf "%s" "$Line" | sed -e 's/\$/\\$/g' -e 's/`/\\`/g' )"
     else
-      Line="$( printf "%s" "$Line" | sed -e 's/%\$/\\$/g' )"
+      Line="$( printf "%s" "$Line" | sed -e 's/%\$/\\$/g' -e 's/\$\[/\\$[/' )"
       if [ -z "$Ass" ]; then
         Line="$( printf "%s" "$Line" | sed -e 's/$(/\\$(/g' -e 's/`/\\`/g' )"
       fi

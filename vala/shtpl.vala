@@ -12,6 +12,7 @@ static Regex regex3 = null;
 static Regex regex4 = null;
 static Regex regex5 = null;
 static Regex regex6 = null;
+static Regex regex7 = null;
 static bool ass = false;
 static bool opt = false;
 
@@ -87,7 +88,7 @@ void shtpl(string _file, bool raw = false, bool raw_text = false) throws GLib.Er
     if (raw || raw_text) {
       line = regex4.replace(regex3.replace(line, -1, 0, "\\\\$"), -1, 0, "\\\\`");
     } else {
-      line = regex5.replace(line, -1, 0, "\\\\$");
+      line = regex7.replace(regex5.replace(line, -1, 0, "\\\\$"), -1, 0, "\\\\$[");
       if (!ass) {
         line = regex4.replace(regex6.replace(line, -1, 0, "\\\\$("), -1, 0, "\\\\`");
       }
@@ -157,6 +158,7 @@ int main (string[] args) {
     regex4 = new Regex("`");
     regex5 = new Regex("%\\$");
     regex6 = new Regex("\\$\\(");
+    regex7 = new Regex("\\$\\[");
 
     if (opt)
       sb = new StringBuilder();
